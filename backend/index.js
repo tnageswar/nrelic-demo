@@ -2,6 +2,7 @@ const config = require('config');
 const express = require('express');
 const cors = require('cors');
 const users_dao = require('./dao/users_dao');
+const logger = require('./logger');
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,12 @@ app.use(
     })
 );
 app.use(cors());
+
+logger.debug('Hlloooo which color am I, and which level');
+logger.info('Hlloooo which color am I, and which level');
+logger.http('Hlloooo which color am I, and which level');
+logger.warn('Hlloooo which color am I, and which level');
+logger.error('Hlloooo which color am I, and which level');
 
 app.use(function (err, req, res, next) {
     res.status(500).send('Some internal error occurred');
