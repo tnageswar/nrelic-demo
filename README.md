@@ -1,6 +1,7 @@
 # nrelic-demo
 
 ##### Setup
+#####  NodeJS Version I used is v14.17.0
 ##### Backend runs on 4000 port & frontend on 3000
 ```
 cd nrelic-demo
@@ -11,8 +12,6 @@ cd ../frontend
 npm i
 npm start
 ```
-
-#####  NodeJS Version I used is v14.17.0
 
 ##### for frontend
 React JS
