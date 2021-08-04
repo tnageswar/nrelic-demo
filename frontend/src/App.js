@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import {
     Grid,
@@ -30,12 +30,23 @@ function App() {
     const classes = useStyles();
     const [company, setCompany] = useState('');
     const [sort, setSort] = useState('');
+    const [search, setSearch] = useState('');
+    const [searchUser, setSearchUser] = useState('');
     const handleChange = (event) => {
         setCompany(event.target.value);
     };
     const handleSortChange = (event) => {
         setSort(event.target.value);
     };
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setSearchUser(search);
+        }, 500);
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [search]);
     return (
         <Grid
             container
@@ -46,8 +57,10 @@ function App() {
             <Grid item style={{ width: '80%' }}>
                 <TextField
                     id="standard-search"
+                    value={search}
                     label="Search users"
                     type="search"
+                    onChange={(evt) => setSearch(evt.target.value)}
                 />
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-helper-label">
@@ -87,7 +100,7 @@ function App() {
                     </Select>
                     <FormHelperText>Sort By</FormHelperText>
                 </FormControl>
-                <UserDataGrid />
+                <UserDataGrid search={searchUser} />
             </Grid>
         </Grid>
     );

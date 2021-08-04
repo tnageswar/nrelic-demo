@@ -12,12 +12,13 @@ router.get(
     validateRequest,
     (req, res) => {
         logger.debug(
-            `Pagination[offset:${req.query.offset}, limit:${req.query.limit}]`
+            `Pagination[offset:${req.query.offset}, limit:${req.query.limit}] plus srch :${req.query.search}`
         );
         res.send(
             users_dao.getAllUsers(
                 req.query?.offset ?? 0,
-                req.query?.limit ?? 10
+                req.query?.limit ?? 10,
+                req.query?.search ?? ''
             )
         );
     }

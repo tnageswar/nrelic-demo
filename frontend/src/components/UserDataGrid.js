@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import axios from 'axios';
 
-export default function UserDataGrid() {
+export default function UserDataGrid(props) {
     const [data, setData] = useState({
         totalCount: 100,
         headers: [],
@@ -14,7 +14,7 @@ export default function UserDataGrid() {
         const fetchData = async () => {
             const offset = page * pageSize;
             const result = await axios(
-                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}`
+                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${props.search}`
             );
             console.log('Data fetched......');
             setData(
@@ -27,7 +27,7 @@ export default function UserDataGrid() {
         };
 
         fetchData();
-    }, [page, pageSize]);
+    }, [page, pageSize, props.search]);
     return (
         <div style={{ height: 600, width: '100%' }}>
             <DataGrid
@@ -35,7 +35,7 @@ export default function UserDataGrid() {
                 page={page}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 onPageChange={(newPage) => setPage(newPage)}
-                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                rowsPerPageOptions={[5, 10, 20, 50, 100, 1000]}
                 paginationMode="server"
                 rowCount={data.totalCount}
                 pagination
