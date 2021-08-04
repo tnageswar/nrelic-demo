@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import './App.css';
-import { Button, Grid } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
+import {
+    Grid,
+    TextField,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    Select,
+    MenuItem,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import UsersTable from './components/UsersTable';
 const useStyles = makeStyles((theme) => ({
     root: {

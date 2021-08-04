@@ -25,8 +25,13 @@ app.use(function (err, req, res, next) {
     res.status(500).send('Some internal error occurred');
 });
 
-app.get('/nrelic/users', (req, res) => {
-    res.send(users_dao.getAllUsers());
+app.get('/api/nrelic/users', (req, res) => {
+    logger.debug(
+        `Pagination[offset:${req.query.offset}, limit:${req.query.limit}]`
+    );
+    res.send(
+        users_dao.getAllUsers(req.query?.offset ?? 0, req.query?.limit ?? 10)
+    );
 });
 
 const server = app.listen(config.get('server.port'), () => {
