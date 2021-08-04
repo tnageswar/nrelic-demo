@@ -1,46 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import axios from 'axios';
 
 export default function UserDataGrid(props) {
-    const [data, setData] = useState({
-        totalCount: 100,
-        headers: [],
-        users: [],
-    });
-    const [pageSize, setPageSize] = useState(10);
-    const [page, setPage] = useState(0);
-    useEffect(() => {
-        const fetchData = async () => {
-            const offset = page * pageSize;
-            const result = await axios(
-                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${props.search}`
-            );
-            console.log('Data fetched......');
-            setData(
-                result?.data ?? {
-                    totalCount: 100,
-                    headers: [],
-                    users: [],
-                }
-            );
-        };
-
-        fetchData();
-    }, [page, pageSize, props.search]);
     return (
         <div style={{ height: 600, width: '100%' }}>
             <DataGrid
-                pageSize={pageSize}
-                page={page}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                onPageChange={(newPage) => setPage(newPage)}
+                pageSize={props.pageSize}
+                page={props.onPageChangepage}
+                onPageSizeChange={(newPageSize) =>
+                    props.handlePageSizeChange(newPageSize)
+                }
+                onPageChange={(newPage) => props.handlePageChange(newPage)}
                 rowsPerPageOptions={[5, 10, 20, 50, 100, 1000]}
                 paginationMode="server"
-                rowCount={data.totalCount}
+                rowCount={props.data.totalCount}
                 pagination
-                rows={data.users}
-                columns={data.headers}
+                rows={props.data.users}
+                columns={props.data.headers}
             />
         </div>
     );

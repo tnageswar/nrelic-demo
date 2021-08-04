@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import './App.css';
 import {
     Grid,
@@ -32,6 +33,41 @@ function App() {
     const [sort, setSort] = useState('');
     const [search, setSearch] = useState('');
     const [searchUser, setSearchUser] = useState('');
+
+    //////////////////////////
+    const [data, setData] = useState({
+        totalCount: 100,
+        headers: [],
+        users: [],
+    });
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(0);
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+    };
+    const handlePageSizeChange = (newPageSize) => {
+        setPageSize(newPageSize);
+    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const offset = page * pageSize;
+            const result = await axios(
+                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${searchUser}`
+            );
+            console.log('Data fetched......');
+            setData(
+                result?.data ?? {
+                    totalCount: 100,
+                    headers: [],
+                    users: [],
+                }
+            );
+        };
+
+        fetchData();
+    }, [page, pageSize, searchUser]);
+    //////////////////////////
+
     const handleChange = (event) => {
         setCompany(event.target.value);
     };
@@ -100,7 +136,13 @@ function App() {
                     </Select>
                     <FormHelperText>Sort By</FormHelperText>
                 </FormControl>
-                <UserDataGrid search={searchUser} />
+                <UserDataGrid
+                    pageSize={pageSize}
+                    page={page}
+                    data={data}
+                    handlePageChange={handlePageChange}
+                    handlePageSizeChange={handlePageSizeChange}
+                />
             </Grid>
         </Grid>
     );

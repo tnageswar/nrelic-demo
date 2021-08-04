@@ -1,5 +1,10 @@
 const data = require('../database/data.json');
 const logger = require('../utils/logger');
+
+const companySet = new Set();
+data.forEach((user) => {
+    companySet.add(user.company_name);
+});
 const headers = [
     { field: 'id', headerName: 'UID', width: 110 },
     {
@@ -37,6 +42,7 @@ function getAllUsers(inOffset, inLimit, search) {
         headers,
         users: finalData,
         totalCount: filteredData.length,
+        companies: Array.from(companySet),
     };
 }
 
