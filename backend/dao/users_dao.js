@@ -25,8 +25,17 @@ const headers = [
         width: 250,
     },
 ];
-function getAllUsers(inOffset, inLimit, search, filterbycompany) {
-    const start = inOffset ?? 0;
+const sortOptions = {
+    0: { field: 'first_name', asc: false, label: 'First Name, Descending' },
+    1: { field: 'first_name', asc: true, label: 'First Name, Ascending' },
+    2: { field: 'last_name', asc: false, label: 'Last Name, Descending' },
+    3: { field: 'last_name', asc: true, label: 'Last Name, Ascending' },
+    4: { field: 'companyName', asc: false, label: 'Company Name, Descending' },
+    5: { field: 'companyName', asc: true, label: 'Company Name, Ascending' },
+};
+function getAllUsers(inOffset, inLimit, search, filterbycompany, sort) {
+    const sortBy = +(sort ?? 1);
+    const start = +(inOffset ?? 0);
     const end = +start + (+inLimit ?? 10);
     logger.debug(
         `DAO Pagination[start:${start}, end:${end}] and search ${search}`
@@ -34,8 +43,10 @@ function getAllUsers(inOffset, inLimit, search, filterbycompany) {
     const filteredData = data
         .filter(
             (user) =>
-                user.first_name.startsWith(search) ||
-                user.last_name.startsWith(search)
+                user.first_name
+                    .toUpperCase()
+                    .startsWith(search.toUpperCase()) ||
+                user.last_name.toUpperCase().startsWith(search.toUpperCase())
         )
         .filter((user) => companyMatched(user.company_name, filterbycompany))
         .map((user) => {
@@ -43,14 +54,33 @@ function getAllUsers(inOffset, inLimit, search, filterbycompany) {
                 id: user['uid'],
                 userName: `${user['first_name']}, ${user['last_name']}`,
                 companyName: user['company_name'],
+                first_name: user['first_name'],
+                last_name: user['last_name'],
             };
         });
-    const finalData = filteredData.slice(start, end);
+    // sort on filtered Data
+    const srtOptn = sortOptions[sortBy];
+    const sortedData = filteredData.sort((u1, u2) => {
+        const fld1 = u1[srtOptn.field].toUpperCase().trim();
+        const fld2 = u2[srtOptn.field].toUpperCase().trim();
+        let retVal = 0;
+        if (fld1 < fld2) {
+            retVal = -1;
+        }
+        if (fld1 > fld2) {
+            retVal = 1;
+        }
+
+        // names must be equal
+        return srtOptn.asc ? retVal : -retVal;
+    });
+    const finalData = sortedData.slice(start, end);
     return {
         headers,
         users: finalData,
         totalCount: filteredData.length,
         companies: Array.from(companySet),
+        sortOptions,
     };
 }
 

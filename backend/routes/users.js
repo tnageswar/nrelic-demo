@@ -8,18 +8,25 @@ const validateRequest = require('../middleware/validate-requests');
 
 router.get(
     '/',
-    [query('offset').optional().isInt(), query('limit').optional().isInt()],
+    [
+        query('offset').optional().isInt(),
+        query('limit').optional().isInt(),
+        query('sort').optional().isInt(),
+    ],
     validateRequest,
     (req, res) => {
         logger.debug(
-            `Query[offset:${req.query.offset}, limit:${req.query.limit}, sarch:${req.query.search}, filterbycompany: ${req.query.filterbycompany}]`
+            `Query[offset:${req.query.offset}, limit:${req.query.limit}, ` +
+                `search:${req.query.search}, filterbycompany: ${req.query.filterbycompany}` +
+                `, sort: ${req.query.sort}]`
         );
         res.send(
             users_dao.getAllUsers(
                 req.query?.offset ?? 0,
                 req.query?.limit ?? 10,
                 req.query?.search ?? '',
-                req.query?.filterbycompany ?? ''
+                req.query?.filterbycompany ?? '',
+                req.query?.sort ?? 1
             )
         );
     }

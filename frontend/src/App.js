@@ -27,20 +27,22 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
     },
 }));
+const defaultData = {
+    totalCount: 100,
+    headers: [],
+    users: [],
+    companies: [],
+    sortOptions: {},
+};
 function App() {
     const classes = useStyles();
     const [company, setCompany] = useState('');
-    const [sort, setSort] = useState('');
+    const [sort, setSort] = useState(1);
     const [search, setSearch] = useState('');
     const [searchUser, setSearchUser] = useState('');
 
     //////////////////////////
-    const [data, setData] = useState({
-        totalCount: 100,
-        headers: [],
-        users: [],
-        companies: [],
-    });
+    const [data, setData] = useState(defaultData);
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(0);
     const handlePageChange = (newPage) => {
@@ -53,21 +55,16 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             const offset = page * pageSize;
-            const result = await axios(
-                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${searchUser}&filterbycompany=${company}`
-            );
+            let url =
+                `http://localhost:4000/api/nrelic/users?` +
+                `offset=${offset}&limit=${pageSize}&search=${searchUser}` +
+                `&filterbycompany=${company}&sort=${sort}`;
+            const result = await axios(url);
             console.log('Data fetched......');
-            setData(
-                result?.data ?? {
-                    totalCount: 100,
-                    headers: [],
-                    users: [],
-                    companies: [],
-                }
-            );
+            setData(result?.data ?? defaultData);
         };
         fetchData();
-    }, [page, pageSize, searchUser, company]);
+    }, [page, pageSize, searchUser, company, sort]);
 
     //////////////////////////
 
@@ -115,7 +112,9 @@ function App() {
                             <em>None</em>
                         </MenuItem>
                         {data.companies.map((company) => (
-                            <MenuItem value={company}>{company}</MenuItem>
+                            <MenuItem key={company} value={company}>
+                                {company}
+                            </MenuItem>
                         ))}
                     </Select>
                     <FormHelperText>Filter by company</FormHelperText>
@@ -130,12 +129,16 @@ function App() {
                         value={sort}
                         onChange={handleSortChange}
                     >
-                        <MenuItem value="">
+                        <MenuItem value={1}>
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {Object.entries(data.sortOptions).map(
+                            ([key, value]) => (
+                                <MenuItem key={key} value={key}>
+                                    {value.label}
+                                </MenuItem>
+                            )
+                        )}
                     </Select>
                     <FormHelperText>Sort By</FormHelperText>
                 </FormControl>

@@ -2,7 +2,7 @@ const { XrgBaseError } = require('../errors/errors');
 const logger = require('../utils/logger');
 const errorHandler = (err, req, res, next) => {
     logger.error(`Errorrr : ${err?.constructor?.name}`);
-    //logger.error(err.stack);
+    logger.error(err.stack);
     if (err instanceof XrgBaseError) {
         return res.status(err.statusCode).send({ errors: err.errorData() });
     }
