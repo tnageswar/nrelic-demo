@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
 export default function UserDataGrid(props) {

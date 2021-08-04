@@ -5,6 +5,13 @@ const companySet = new Set();
 data.forEach((user) => {
     companySet.add(user.company_name);
 });
+const companyMatched = (companyName, filterComp) => {
+    if (filterComp) {
+        return companyName === filterComp;
+    } else {
+        return true;
+    }
+};
 const headers = [
     { field: 'id', headerName: 'UID', width: 110 },
     {
@@ -18,7 +25,7 @@ const headers = [
         width: 250,
     },
 ];
-function getAllUsers(inOffset, inLimit, search) {
+function getAllUsers(inOffset, inLimit, search, filterbycompany) {
     const start = inOffset ?? 0;
     const end = +start + (+inLimit ?? 10);
     logger.debug(
@@ -30,6 +37,7 @@ function getAllUsers(inOffset, inLimit, search) {
                 user.first_name.startsWith(search) ||
                 user.last_name.startsWith(search)
         )
+        .filter((user) => companyMatched(user.company_name, filterbycompany))
         .map((user) => {
             return {
                 id: user['uid'],

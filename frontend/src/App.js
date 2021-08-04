@@ -39,6 +39,7 @@ function App() {
         totalCount: 100,
         headers: [],
         users: [],
+        companies: [],
     });
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(0);
@@ -48,11 +49,12 @@ function App() {
     const handlePageSizeChange = (newPageSize) => {
         setPageSize(newPageSize);
     };
+
     useEffect(() => {
         const fetchData = async () => {
             const offset = page * pageSize;
             const result = await axios(
-                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${searchUser}`
+                `http://localhost:4000/api/nrelic/users?offset=${offset}&limit=${pageSize}&search=${searchUser}&filterbycompany=${company}`
             );
             console.log('Data fetched......');
             setData(
@@ -60,12 +62,13 @@ function App() {
                     totalCount: 100,
                     headers: [],
                     users: [],
+                    companies: [],
                 }
             );
         };
-
         fetchData();
-    }, [page, pageSize, searchUser]);
+    }, [page, pageSize, searchUser, company]);
+
     //////////////////////////
 
     const handleChange = (event) => {
@@ -111,9 +114,9 @@ function App() {
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {data.companies.map((company) => (
+                            <MenuItem value={company}>{company}</MenuItem>
+                        ))}
                     </Select>
                     <FormHelperText>Filter by company</FormHelperText>
                 </FormControl>
