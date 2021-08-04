@@ -2,7 +2,7 @@ const data = require('../database/data.json');
 const logger = require('../utils/logger');
 function getAllUsers(inOffset, inLimit) {
     const start = inOffset ?? 0;
-    const end = start + (inLimit ?? 10);
+    const end = +start + (+inLimit ?? 10);
     logger.debug(`DAO Pagination[start:${start}, end:${end}]`);
     return {
         users: data
