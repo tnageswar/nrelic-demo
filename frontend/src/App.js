@@ -10,7 +10,7 @@ import {
     MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import UsersTable from './components/UsersTable';
+import UserDataGrid from './components/UserDataGrid';
 const useStyles = makeStyles((theme) => ({
     root: {
         '& .MuiTextField-root': {
@@ -43,7 +43,7 @@ function App() {
             alignContent="center"
             style={{ margin: '50px' }}
         >
-            <Grid item>
+            <Grid item style={{ width: '80%' }}>
                 <TextField
                     id="standard-search"
                     label="Search users"
@@ -87,9 +87,8 @@ function App() {
                     </Select>
                     <FormHelperText>Sort By</FormHelperText>
                 </FormControl>
-                <UsersTable />
+                <UserDataGrid />
             </Grid>
-            <Grid item></Grid>
         </Grid>
     );
 }

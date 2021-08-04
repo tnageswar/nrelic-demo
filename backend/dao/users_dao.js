@@ -1,14 +1,16 @@
 const data = require('../database/data.json');
 const logger = require('../utils/logger');
 const headers = [
-    { field: 'uid', headerName: 'UID' },
+    { field: 'id', headerName: 'UID', width: 110 },
     {
         field: 'userName',
         headerName: 'User Name',
+        width: 250,
     },
     {
-        field: 'company_name',
+        field: 'companyName',
         headerName: 'Company',
+        width: 250,
     },
 ];
 function getAllUsers(inOffset, inLimit) {
@@ -19,11 +21,12 @@ function getAllUsers(inOffset, inLimit) {
         headers,
         users: data.slice(start, end).map((user) => {
             return {
-                uid: user['uid'],
+                id: user['uid'],
                 userName: `${user['first_name']}, ${user['last_name']}`,
                 companyName: user['company_name'],
             };
         }),
+        totalCount: data.length,
     };
 }
 
